@@ -1,162 +1,260 @@
+// Erica Ruiz Diaz 119765/0//  // COMISION 5 //
+// link 
 let imagen = [];
 let Textos = [];
 let sound;
 let estado;
-let medidas;
-let botonInicio, botonSi, botonNo;
-
-
 
 function preload() {
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 27; i++) {
     imagen[i] = loadImage("data/imagen" + i + ".jpeg");
-      sound = loadSound("data/sound.mp3");
   }
-  // Carga de textos una sola vez
+  sound = loadSound("data/sound.mp3");
   Textos = loadStrings("data/pikachu.txt");
+  console.log(Textos.length);
 }
 
 function setup() {
   createCanvas(640, 480);
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 27; i++) {
     imagen[i].resize(640, 480);
   }
-  estado = "inicio";
-
-  botonInicio = {
-    x: 240,
-    y: 370,
-    ancho: 100,
-    alto: 40
-  };
-
-  botonSi = {
-    x: 50,
-    y: height - 100,
-    ancho: 100,
-    alto: 50
-  };
-
-  botonNo = {
-    x: 480,
-    y: height - 100,
-    ancho: 100,
-    alto: 50
-  };
-
-  medidas = {
-    x: width / 2,
-    y: height / 2,
-    ancho: 640,
-    alto: 480,
-    alinea: CENTER
-  };
+  estado = 0;
 }
 
 function draw() {
   background(200);
+  cargarEstado(estado);
+
+  fill(0, 0, 255); 
+  textSize(20); 
+  textAlign(LEFT); 
   
-  if (estado === "inicio") {
-    cargaOtraImagen(imagen[0], medidas);
-    dibujarBoton(botonInicio);
-    mostrarTexto(Textos[0], width / 2, 120);
-  } else if (estado === "primera") {
-    cargaOtraImagen(imagen[1], medidas);
-    dibujarBoton(botonInicio);
-    mostrarTexto(Textos[1], width / 2, 120); 
-  } else if (estado === "segunda") {
-    cargaOtraImagen(imagen[2], medidas);
-    dibujarBoton(botonInicio);
-    mostrarTexto(Textos[2], width / 2, 120); 
-  } else if (estado === "tercera") { 
-    cargaOtraImagen(imagen[3], medidas);
-    dibujarBoton(botonSi); 
-  } else if (estado === "cuarta") {
-    cargaOtraImagen(imagen[3], medidas);
-    dibujarBoton(botonSi); 
-    dibujarBoton(botonNo); 
-    mostrarTexto(Textos[3], width / 2, 120); 
-  } else if (estado === "quinta") {
-    cargaOtraImagen(imagen[4], medidas);
-    dibujarBoton(botonInicio);
-  } else if (estado === "sexta") {
-    cargaOtraImagen(imagen[5], medidas);
-    dibujarBoton(botonInicio);
-    mostrarTexto(Textos[4], width / 2, 120); 
-  } else if (estado === "septima") {
-    cargaOtraImagen(imagen[6], medidas);
-    dibujarBoton(botonSi); 
-    dibujarBoton(botonNo); 
-    mostrarTexto(Textos[5], width / 2, 120); 
-  } else if (estado === "octava") {
-    cargaOtraImagen(imagen[7], medidas);
-    dibujarBoton(botonSi); 
-    mostrarTexto(Textos[6], width / 2, 120); 
-  } else if (estado === "novena") {
-    cargaOtraImagen(imagen[8], medidas);
-    dibujarBoton(botonNo); 
+  if (estado < Textos.length && Textos[estado]) { 
+    mostrarTexto(Textos[estado], width / 2, 120);
   }
 }
-function mostrarTexto(texto, x, y) {
-  fill(255);
-  textSize(20);
-  textAlign(CENTER);
-  text(texto, x, y);
+
+function cargarEstado(estado) {
+  cargaOtraImagen(imagen[estado], { x: width / 2, y: height / 2, ancho: 640, alto: 480, alinea: CENTER });
+
+  if (estado === 0) {
+    dibujarBotonInicio();
+  }
+
+  if (estado === 1 || estado === 2 || estado === 4 || estado === 5 || estado === 6 || estado === 8 || estado === 9 || estado === 10 || estado === 13 || estado === 14 || estado === 15 || estado === 17 || estado === 18 || estado === 19 || estado === 21 || estado === 22 || estado === 23 || estado === 24) {
+    
+    dibujarBotonSiguiente();
+  } 
+
+  if (estado === 3 || estado === 7 || estado === 11 || estado === 16) {
+    botonSi();
+    botonNo();
+  }
+  
+  if (estado === 12 || estado === 20 || estado === 25 || estado === 26) {
+    botonReiniciar();
+  }
+
+ if (estado === 0 || estado === 26){
+    BotonCreditos();
+  }
 }
+
 
 function mousePressed() {
-  if (estado === "inicio") {
-    if (detectarBoton(botonInicio)) {
-      estado = "primera";
-    }
-  } else if (estado === "primera") {
-    if (detectarBoton(botonInicio)) {
-      estado = "segunda";
-    }
-  } else if (estado === "segunda") {
-    if (detectarBoton(botonInicio)) {
-      estado = "cuarta";
-    }
-  } else if (estado === "cuarta") {
-    if (detectarBoton(botonSi)) {
-      estado = "quinta";
-    }
-  } else if (estado === "quinta") {
-    if (detectarBoton(botonInicio)) {
-      estado = "sexta";
-    }
-  } else if (estado === "sexta") {
-    if (detectarBoton(botonInicio)) {
-      estado = "septima";
-    }
-  } else if (estado === "septima") {
-    if (detectarBoton(botonSi)) {
-      estado = "octava";
-    }
-    if (detectarBoton(botonNo)) {
-      estado = "novena";
+  
+  if (ClickBotonSiguiente()) {
+    estado += 1; 
+  } 
+  
+  if (ClickBotonSi()) {
+    if (estado === 3) {
+      estado = 4;
+    } else if (estado === 7) {
+      estado = 8; 
+    } else if (estado === 11) {
+      estado = 13;
+    } else if (estado === 16) {
+      estado = 17;
+    } 
+  }
+  
+  if (ClickBotonNo()) {
+    if (estado === 3) {
+      estado = 6; 
+    } else if (estado === 6) {
+      estado = 7;
+    } else if (estado === 7) {
+      estado = 11;
+    } else if (estado === 11) {
+      estado = 12; // final 1 
+    } else if (estado === 16) {
+      estado = 21;
     }
   }
-  if (!sound.isPlaying()) { 
-    sound.play();
-  } else {sound.continue();
-}
-}
-function dibujarBoton(boton) {
-  if (detectarBoton(boton)) {
-    fill(0, 255, 255);
-  } else {
-    fill(0, 0, 255);
-  }
-  rect(boton.x, boton.y, boton.ancho, boton.alto, boton.alto / 4);
-}
 
-function detectarBoton(boton) {
-  return mouseX > boton.x && mouseX < boton.x + boton.ancho &&
-         mouseY > boton.y && mouseY < boton.y + boton.alto;
+  
+  if (ClickBotonReiniciar()) {
+    estado = 0;  
+  }
+
+ if (!sound.isPlaying()) {
+    sound.play(); 
+  }
 }
 
 function cargaOtraImagen(imag, medidas) {
-  imageMode(medidas.alinea); 
+  imageMode(medidas.alinea);
   image(imag, medidas.x, medidas.y, medidas.ancho, medidas.alto);
+}
+
+function mostrarTexto(texto, x, y) {
+  fill(0, 0, 0, 150);
+  let anchoCuadro = 615;
+  let altoCuadro = 200;
+  rect(x - anchoCuadro / 2, y - altoCuadro / 2 - 15, anchoCuadro, altoCuadro, 100);
+
+  fill(255);
+  textSize(25);
+  textAlign(CENTER);
+  let limiteTexto = 580;
+  let a = width / 2 - 300;
+  let b = 30;
+  text(texto, a, b, limiteTexto);
+}
+
+function dibujarBotonInicio() {
+  let x = 240;
+  let y = 320;
+  let ancho = 100;
+  let alto = 40;
+
+ fill(0, 0, 255); 
+  rect(x, y, ancho, alto, alto / 4);  
+  fill(255); 
+  textSize(20); 
+  text('inicio', x + ancho / 2, y + alto / 2); 
+}
+
+function dibujarBotonSiguiente() {
+  let x = 240;
+  let y = 320;
+  let ancho = 100;
+  let alto = 40;
+
+  fill(0, 0, 255); 
+  rect(x, y, ancho, alto, alto / 4);  
+  fill(255); 
+  textSize(20); 
+  text('Siguiente', x + ancho / 2, y + alto / 2); 
+}
+
+function botonSi() {
+  let x = 50;
+  let y = height - 100;
+  let ancho = 100;
+  let alto = 50;
+
+  fill(0, 0, 255);  
+  rect(x, y, ancho, alto, alto / 4);  
+  fill(255);
+  textSize(20);  
+  text('Sí', x + ancho / 2, y + alto / 2); 
+}
+
+function botonNo() {
+  let x = 480;
+  let y = height - 100;
+  let ancho = 100;
+  let alto = 50;
+
+  fill(0, 0, 255); 
+  rect(x, y, ancho, alto, alto / 4);  
+  fill(255);
+  textSize(20);  
+  text('No', x + ancho / 2, y + alto / 2); 
+}
+
+function ClickBotonSi() {
+  let x = 50;
+  let y = height - 100;
+  let ancho = 100;
+  let alto = 50;
+
+  return mouseX > x && mouseX < x + ancho &&
+         mouseY > y && mouseY < y + alto;
+}
+
+function ClickBotonNo() {
+  let x = 480;
+  let y = height - 100;
+  let ancho = 100;
+  let alto = 50;
+
+  return mouseX > x && mouseX < x + ancho &&
+         mouseY > y && mouseY < y + alto;
+}
+
+function botonReiniciar() {
+  let x = 380;
+  let y = height - 100;
+  let ancho = 100;
+  let alto = 50;
+
+  fill(250, 0, 0);  
+  rect(x, y, ancho, alto, alto / 4);  
+  fill(255);  
+  textSize(20); 
+  text('Reiniciar', x + ancho / 2, y + alto / 2); 
+
+  if (mouseX > x && mouseX < x + ancho && mouseY > y && mouseY < y + alto && mouseIsPressed) {
+    estado = 0;  
+  }
+}
+
+
+function ClickBotonSiguiente() {
+  let x = 240;
+  let y = 320;
+  let ancho = 100;
+  let alto = 40;
+
+  return mouseX > x && mouseX < x + ancho &&
+         mouseY > y && mouseY < y + alto;
+}
+
+function ClickBotonReiniciar() {
+  let x = 380;
+  let y = height - 100;
+  let ancho = 100;
+  let alto = 50;
+
+  return mouseX > x && mouseX < x + ancho &&
+         mouseY > y && mouseY < y + alto;
+}
+function BotonCreditos() {
+ let x = 240;
+  let y = 410;
+  let ancho = 100;
+  let alto = 40;
+
+ fill(255, 105, 180) 
+  rect(x, y, ancho, alto, alto / 4);  
+  fill(255);  
+  textSize(20); 
+  text('creditos', x + ancho / 2, y + alto / 2); 
+
+  if (mouseX > x && mouseX < x + ancho && mouseY > y && mouseY < y + alto && mouseIsPressed) {
+    estado = 26;  
+  }
+}
+function ClickBotonCreditos() {
+ let x = 240;
+  let y = 410;
+  let ancho = 100;
+  let alto = 40;
+
+  return mouseX > x && mouseX < x + ancho &&
+         mouseY > y && mouseY < y + alto;
 }
