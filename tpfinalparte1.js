@@ -1,4 +1,4 @@
-// Erica Ruiz Diaz 119765/0//  // COMISION 5 //
+// Erica Ruiz Diaz 119765/0// //Aylen Bustamante 118978/1 // COMISION 5 //
 // link 
 let imagen = [];
 let Textos = [];
